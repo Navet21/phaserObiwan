@@ -4,6 +4,18 @@ import { GameOver } from './scenes/GameOver';
 import { MainMenu } from './scenes/MainMenu';
 import { Preloader } from './scenes/Preloader';
 
+import { Bugfender } from '@bugfender/sdk';
+Bugfender.init({
+    appKey: 'ZSfyFjQKfpvjghLSvdl12jXDzemTuYxT',
+    overrideConsoleMethods: false,
+    // printToConsole: true,
+    // registerErrorHandler: true,
+    logBrowserEvents: false,
+    logUIEvents: false,
+    // version: '',
+    // build: '',
+});
+
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config = {
@@ -24,5 +36,5 @@ const config = {
         GameOver
     ]
 };
-
+Bugfender.log("La app se ha iniciado correctamente");
 export default new Phaser.Game(config);

@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { Bugfender } from '@bugfender/sdk';
 
 
 
@@ -36,10 +37,24 @@ export class MainMenu extends Scene
                         console.error("No se encontraron bicicletas en la API.");
                     }
                 })
-                .catch(error => console.error('Error al obtener las bicicletas:', error));
+                .then(
+                    Bugfender.log("La api se ha llamado correctamente")
+                )
+                .catch(error => console.error('Error al obtener las bicicletas:', error))
+                .then(error => Bugfender.log("Ha habido un error en la llamada a la api",error))
+        
         }
         
+        this.generarError = () =>{
+            const errores = [
+                () => { throw new Error('Este es un error de prueba tipo 1'); },
+                () => { throw new TypeError('Este es un error de tipo'); }
+            ];
     
+            // Elegir aleatoriamente un error y lanzarlo
+            const errorAleatorio = Phaser.Math.Between(0, errores.length - 1);
+            errores[errorAleatorio]();
+        }
 }
     
 
@@ -49,6 +64,30 @@ export class MainMenu extends Scene
 
         const obiWan = this.add.image(512, 300, 'obiwan');
         obiWan.setInteractive();
+
+        const button = this.add.image(800, 100, 'btnverde').setInteractive();
+        const button2 = this.add.image(800, 400, 'btnrojo').setInteractive();
+
+
+        button.on('pointerdown', () => {
+            try {
+                this.generarError();
+            } catch (error) {
+                Bugfender.error(`Error atrapado: ${error.message}`);
+                console.error(error);
+            }
+        });
+
+        button2.on('pointerdown', () => {
+            try {
+                this.generarError();
+            } catch (error) {
+                Bugfender.error(`Error 2 atrapado: ${error.message}`);
+                console.error(error);
+            }
+        });
+
+        
 
         this.tweens.add({
             targets: obiWan,
@@ -66,6 +105,7 @@ export class MainMenu extends Scene
         {
 
             this.llamadaApi();
+            Bugfender.log("Se ha pulsado el botón de Obi Wan");
 
         },this);
     }
